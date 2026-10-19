@@ -1,0 +1,92 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: spk_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - spk-networks
+  migrate:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    container_name: spk-kinerja-migrate
+    restart: "no"
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+    command:
+      [
+        "npx",
+        "prisma",
+        "migrate",
+        "deploy"
+      ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - spk-networks
+
+  backend:
+    container_name: spk_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runner
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    expose:
+      - "3000"
+    networks:
+      - spk-networks
+
+  frontend:
+    container_name: spk_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000/api
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "8080:80"
+    networks:
+      - spk-networks
+
+volumes:
+  postgres_data:
+
+networks:
+  spk-networks:
+    driver: bridge

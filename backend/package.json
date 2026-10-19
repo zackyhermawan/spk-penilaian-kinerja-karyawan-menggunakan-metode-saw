@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/server.js",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^22.20.2",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dayjs": "^1.11.23",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^6.19.3",
+    "zod": "^4.6.2"
+  }
+}

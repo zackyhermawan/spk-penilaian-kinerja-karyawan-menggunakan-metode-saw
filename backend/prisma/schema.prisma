@@ -1,0 +1,208 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum PeriodStatus {
+  OPEN
+  CLOSED
+}
+
+enum CriteriaType {
+  COST
+  BENEFIT
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  username String @unique
+  password String
+  role String?
+  workshop_name String?
+  workshop_address String?
+
+  employees Employee[]
+
+  createdAt DateTime @default(now())
+}
+
+model Position {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+
+  employees Employee[]
+  positionCriterias PositionCriteria[]
+  evaluations Evaluation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee { 
+  id Int @id @default(autoincrement())
+  code String @unique
+  name String
+  phone String?
+  birthDate DateTime? @db.Date
+  status EmployeeStatus @default(ACTIVE)
+
+  positionId Int
+  position Position @relation(fields: [positionId], references: [id])
+
+  userId Int?
+  user User? @relation(fields: [userId], references: [id])
+
+  periodEmployees PeriodEmployee[]
+  evaluations Evaluation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([positionId])
+}
+
+model Criteria {
+  id Int @id @default(autoincrement())
+  name String
+  groupName String?
+  isActive Boolean @default(true)
+  type CriteriaType
+
+  positionCriterias PositionCriteria[]
+  ratingScales RatingScale[]
+  evaluationDetails EvaluationDetail[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PositionCriteria {
+  id Int @id @default(autoincrement())
+  weight Decimal @db.Decimal(3, 2)
+
+  positionId Int
+  position Position @relation(fields: [positionId], references: [id])
+
+  criteriaId Int
+  criteria Criteria @relation(fields: [criteriaId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([positionId, criteriaId])
+  @@index([criteriaId])
+}
+
+model RatingScale {
+  id Int @id @default(autoincrement())
+  minValue Decimal @db.Decimal(10, 2)
+  maxValue Decimal @db.Decimal(10, 2)
+  label String?
+  score Int
+
+  criteriaId Int
+  criteria Criteria @relation(fields: [criteriaId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([criteriaId])
+}
+
+model Period {
+  id Int @id @default(autoincrement())
+  month Int
+  year Int
+  status PeriodStatus @default(OPEN)
+
+  periodEmployees PeriodEmployee[]
+  evaluations Evaluation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([month, year])
+}
+
+model PeriodEmployee {
+  id Int @id @default(autoincrement())
+
+  periodId Int
+  period Period @relation(fields: [periodId], references: [id])
+
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([periodId, employeeId])
+  @@index([employeeId])
+}
+
+model Evaluation {
+  id Int @id @default(autoincrement())
+  finalScore Decimal? @db.Decimal(10, 6)
+  rank Int?
+  resultNote String?
+
+  positionId Int
+  position Position @relation(fields: [positionId], references: [id])
+
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+
+  periodId Int
+  period Period @relation(fields: [periodId], references: [id])
+
+  evaluationDetails EvaluationDetail[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([employeeId, periodId])
+  @@index([periodId])
+  @@index([positionId])
+}
+
+model EvaluationDetail {
+  id Int @id @default(autoincrement())
+  rawValue Decimal? @db.Decimal(10, 2)
+  ratingScore Int?
+  normalizedValue Decimal? @db.Decimal(10, 6)
+  
+  // Snapshot bobot saat evaluasi dilakukan
+  weight Decimal @db.Decimal(3, 2)
+  
+  // normalizedValue × weight
+  weightedValue Decimal? @db.Decimal(10, 6)
+
+  evaluationId Int
+  evaluation Evaluation @relation(fields: [evaluationId], references: [id])
+
+  criteriaId Int
+  criteria Criteria @relation(fields: [criteriaId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([evaluationId, criteriaId])
+  @@index([criteriaId])
+}
