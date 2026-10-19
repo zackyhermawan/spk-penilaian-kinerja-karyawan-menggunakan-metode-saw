@@ -218,22 +218,15 @@ const handleSaveForm = async() => {
     }
 }
 
-const handleStatusChange = async (
-    item: Criteria,
-    isActive: boolean
-) => {
+const handleStatusChange = async (item: Criteria, isActive: boolean) => {
     try {
 
         if (isActive === item.isActive) return
     
-        const confirmed = await alertConfirm(
-            `Apakah anda yakin ingin mengubah status ${item.name} menjadi ${
-                isActive ? "Aktif" : "Nonaktif"
-            }?`,
+        const confirmed = await alertConfirm(`Apakah anda yakin ingin mengubah status ${item.name} menjadi ${isActive ? "Aktif" : "Nonaktif"}?`,
             async () => {
                 await criteriaService.updateStatus(item.id, isActive)
-            }
-        )
+            })
     
         if (!confirmed.isConfirmed) {
             return
@@ -241,11 +234,7 @@ const handleStatusChange = async (
     
         await fetchCriterias()
     
-        alertSuccess(
-            `Status ${item.name} berhasil diubah menjadi ${
-                isActive ? "Aktif" : "Nonaktif"
-            }`
-        )
+        alertSuccess(`Status ${item.name} berhasil diubah menjadi ${isActive ? "Aktif" : "Nonaktif"}`)
     } catch (error: any) {
         console.log(error)
         throw error

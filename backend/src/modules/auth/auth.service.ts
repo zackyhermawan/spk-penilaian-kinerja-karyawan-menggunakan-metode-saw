@@ -7,9 +7,6 @@ export class AuthService {
     private authRepository = new AuthRepository()
 
     async login(username: string, password: string) {
-        console.log("JWT_SECRET tersedia:", Boolean(process.env.JWT_SECRET))
-        console.log("JWT_EXPIRES_IN:", process.env.JWT_EXPIRES_IN)
-        
         const user = await this.authRepository.findUserByUsername(username)
         if (!user) {
             throw new AppError("Pengguna tidak ditemukan", 404)

@@ -160,10 +160,7 @@ const doughnutChartOptions = {
 
 const loadDashboard = async () => {
   try {
-    const response = await dashboardService.getAdminDashboard(
-      selectedPeriodId.value ?? undefined, 
-      selectedPositionId.value ?? undefined
-    ) as any
+    const response = await dashboardService.getAdminDashboard(selectedPeriodId.value ?? undefined, selectedPositionId.value ?? undefined) as any
 
     dashboard.value = response.data
     
