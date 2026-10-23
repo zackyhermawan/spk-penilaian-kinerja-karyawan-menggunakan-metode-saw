@@ -494,7 +494,7 @@ const sortedEvaluations = computed(() => {
                                             </span>
     
 
-                                            <button v-if="getRecommendationCount(item) > 0" @click="openRecommendation(item)" title="Lihat Rekomendasi Perbaikan" class="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all active:scale-95 cursor-pointer">
+                                            <button v-if="getRecommendationCount(item) > 0" @click="openRecommendation(item)" title="Lihat Rekomendasi Pembinaan" class="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all active:scale-95 cursor-pointer">
                                                 <AlertTriangle class="w-4 h-4 animate-bounce" />
                                             </button>
     
@@ -516,7 +516,7 @@ const sortedEvaluations = computed(() => {
                                     <Sparkles class="w-4 h-4" />
                                 </div>
                                 <div>
-                                    <h3 class="text-base font-bold text-gray-900">Rekomendasi Perbaikan</h3>
+                                    <h3 class="text-base font-bold text-gray-900">Rekomendasi Pembinaan</h3>
                                     <p class="text-xs text-gray-500 mt-0.5">Catatan otomatis dari sistem berdasarkan hasil kriteria</p>
                                 </div>
                             </div>
@@ -565,7 +565,7 @@ const sortedEvaluations = computed(() => {
                                 </p>
                             </div>
                             <div v-if="!selectedItem.recommendations || selectedItem.recommendations.length === 0 "class="py-6 text-center text-xs text-gray-400">
-                                Tidak ada rekomendasi perbaikan.
+                                Tidak ada rekomendasi pembinaan.
                             </div>
                         </div>
 
@@ -598,12 +598,12 @@ const sortedEvaluations = computed(() => {
                 </div>
             </template>
 
-            <div v-if="activeTab === 4 && isCalculated" class="flex items-center justify-end gap-3 pt-2">
+            <!-- <div v-if="activeTab === 4 && isCalculated" class="flex items-center justify-end gap-3 pt-2">
                 <button class="flex items-center gap-2 px-4 py-2 bg-green-500 border border-gray-200 rounded-xl text-sm font-medium text-white hover:bg-green-600 transition-colors shadow-sm cursor-pointer">
                     <Upload class="w-4 h-4 text-white" />
                     Export
                 </button>
-            </div>
+            </div> -->
             
         </div>
     </MainLayout>

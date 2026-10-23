@@ -7,7 +7,6 @@ import positionService from '../../services/position.service.ts'
 import { alertConfirm, alertError, alertSuccess } from '../../utils/alert.ts'
 
 const positions = ref<Position[]>([])
-
 const isFormModalOpen = ref(false)
 const isEditMode = ref(false)
 const saving = ref(false)
@@ -69,14 +68,10 @@ const fetchPositions = async() => {
         positions.value = response?.data ?? response ?? []
         if (response?.pagination) {
             pagination.total = response.pagination.total ?? 0
-            pagination.totalPages = Math.ceil(
-                (response.pagination.total || 0) / (response.pagination.limit || 1)
-            )
+            pagination.totalPages = Math.ceil((response.pagination.total || 0) / (response.pagination.limit || 1))
         } else if (response?.meta) { 
             pagination.total = response.meta.total ?? 0
-            pagination.totalPages = Math.ceil(
-                (response.meta.total || 0) / (response.meta.limit || 1)
-            )
+            pagination.totalPages = Math.ceil((response.meta.total || 0) / (response.meta.limit || 1))
         }
     } catch (error: any) {
         console.log('Detail Error:', error)

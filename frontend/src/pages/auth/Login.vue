@@ -6,14 +6,13 @@ import { Lock, User } from "lucide-vue-next"
 
 const router = useRouter()
 const authStore = useAuthStore()
+const loading = ref(false)
+const errorMessage = ref("")
 
 const form = reactive({
   username: "",
   password: ""
 })
-
-const loading = ref(false)
-const errorMessage = ref("")
 
 const handleLogin = async () => {
   errorMessage.value = ""
@@ -67,6 +66,7 @@ const handleLogin = async () => {
           {{ loading ? "Loading..." : "Masuk Sekarang" }}
         </button>
       </form>
+
     </div>
   </div>
 </template>

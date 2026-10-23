@@ -28,10 +28,10 @@ const dashboard = ref<AdminDashboard | null>(null)
 const periods = ref<Period[]>([])
 const positions = ref<Position[]>([])
 const selectedPeriodId = ref<number | null>(null)
-const selectedPositionId = ref<number | null>(null)
-
-const cards = computed(() => {
-  return dashboard.value?.cards ?? {
+  const selectedPositionId = ref<number | null>(null)
+    
+    const cards = computed(() => {
+      return dashboard.value?.cards ?? {
     totalEmployees: 0,
     activeEmployees: 0,
     averageScore: 0,
@@ -53,7 +53,7 @@ const distribution = computed(() => {
 
 const lineChartData = computed(() => ({
   labels: trend.value.map(item => item.label),
-
+  
   datasets: [
     {
       label: "Rata-rata Skor",
@@ -90,7 +90,7 @@ const lineChartOptions = computed(() => ({
       }
     }
   },
-
+  
   scales: {
     x: {
       grid: {
@@ -103,7 +103,7 @@ const lineChartOptions = computed(() => ({
         }
       }
     },
-
+    
     y: {
       min: 0,
       max: 1,
@@ -122,7 +122,7 @@ const lineChartOptions = computed(() => ({
 
 const doughnutChartData = computed(() => ({
   labels: distribution.value.map(item => item.label),
-
+  
   datasets: [
     {
       backgroundColor: [
@@ -149,7 +149,7 @@ const doughnutChartOptions = {
     legend: {
       display: false
     },
-
+    
     tooltip: {
       backgroundColor: "#1e293b",
       padding: 12,
@@ -157,6 +157,7 @@ const doughnutChartOptions = {
     }
   }
 }
+
 
 const loadDashboard = async () => {
   try {
