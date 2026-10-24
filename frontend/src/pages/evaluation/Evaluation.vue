@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Save, Calculator, Filter, Award, Upload, AlertTriangle, CheckCircle2 } from 'lucide-vue-next'
+import { ArrowLeft, Save, Calculator, Filter, Award, AlertTriangle, CheckCircle2 } from 'lucide-vue-next'
 import MainLayout from '../../layouts/MainLayout.vue'
 import { useEvaluationStore } from '../../stores/evaluation.store.ts'
 import { usePeriodStore } from '../../stores/period.store.ts'
