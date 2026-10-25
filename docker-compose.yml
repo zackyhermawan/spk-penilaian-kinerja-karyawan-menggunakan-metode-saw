@@ -57,7 +57,7 @@ services:
       PORT: 3000
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3002:3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -74,7 +74,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: http://localhost:3000/api
+        VITE_API_URL: /api
     restart: unless-stopped
     depends_on:
       backend:
